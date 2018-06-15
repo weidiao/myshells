@@ -1,0 +1,9 @@
+#!/bin/bash 
+cat /dev/null >tmp 
+while true ;do
+	clear
+	./draw
+	echo -n "please input x y c : "
+	read x y c
+	echo "$x $y $c">>tmp
+done

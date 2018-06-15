@@ -1,0 +1,18 @@
+1.将标准输出与标准错误输出重定向到/dev/null
+	第一种写法，比较常见：
+		grep "abc" test.txt 1>/dev/null 2>&1
+	常见的错误写法：
+		grep "abc" test.txt 2>&1 1>/dev/null
+	简洁的写法：
+		grep "abc" test.txt &> /dev/null
+2.将一个文本的所有行用逗号连接起来 
+	while read x;do echo -n "$x,"; done < test.txt
+	简洁的写法：  $ paste -sd, /tmp/test.txt
+3.过滤重复行
+	sort /tmp/test.txt | uniq
+	sort /tmp/test.txt -u
+4.grep查找单词
+	grep '10.0.0.1\>' /tmp/ip.list
+	grep -w '10.0.0.1' /tmp/ip.list
+5.grep --
+	echo 'abc-i' | grep -- -i

@@ -1,0 +1,19 @@
+man zip  unzip   
+random urandom
+dd : copy file
+od -x :base on 16
+seq
+gnome-screenshot
+gnome- and press tab 2 times ,you will see many useful tools.
+
+which
+whereis
+rmmod ,modprobe :删除模块、模块探测
+debootstrap
+
+view process running time : ps -A -opid,stime,etime,args
+
+gnome- and press tab two times
+ctrl+; can see paste board
+awsome interviews : an open source interview problems set  
+/dev is very useful ,many command is just read from those files

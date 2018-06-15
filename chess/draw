@@ -1,0 +1,48 @@
+#!/bin/bash
+cat <<TELL
+		Arguments for a function can be multiline !
+		for example,there is a file whose contents like this :
+			12 23 
+			34 34 23 34
+			2 3
+		
+		And you can write : sum `cat fileName`
+		
+TELL
+a=()
+w=`cat config | awk '{ print $1 }'`
+h=`cat config | awk '{ print $2 }'`
+cnt=`expr $w \* $h`
+function init(){
+	local i=0;
+	while test $i -lt $cnt;do
+		a[$i]='+'
+		i=`expr $i + 1`
+	done
+}
+function cin(){ 
+	while test $# -gt 0 ;do
+		local x=$1
+		local y=$2
+		local c=$3
+		shift 3
+		local z=`expr $x \* $h + $y`
+		a[$z]=$c
+	done
+}
+function draw(){
+	local i=0;
+	while test $i -lt $w ;do
+		local j=0;
+		while test $j -lt $h ;do 
+			local k=`expr $i \* $h + $j`
+			echo -n ${a[$k]}
+			j=`expr $j + 1`
+		done
+		echo
+		i=`expr $i + 1`
+	done
+}
+init
+cin `cat tmp ` #| awk '{ printf("%d %d %c ",$1,$2,$3)}'` 
+draw

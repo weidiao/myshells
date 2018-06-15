@@ -1,0 +1,40 @@
+设置陷阱
+
+当你编写的脚本挂掉后，文件系统处于未知状态。比如锁文件状态、临时文件状态或者更新了一个文件后在更新下一个文件前挂掉。如果你能解决这些问题，无论是 删除锁文件，又或者在脚本遇到问题时回滚到已知状态，你都是非常棒的。幸运的是，bash提供了一种方法，当bash接收到一个UNIX信号时，运行一个 命令或者一个函数。可以使用trap命令。
+
+trap command signal [signal ...]
+
+你可以链接多个信号（列表可以使用kill -l获得），但是为了清理残局，我们只使用其中的三个：INT，TERM和EXIT。你可以使用-as来让traps恢复到初始状态。
+信号描述
+ 
+INT 	
+Interrupt - 当有人使用Ctrl-C终止脚本时被触发
+TERM 	
+
+Terminate - 当有人使用kill杀死脚本进程时被触发
+EXIT 	
+Exit - 这是一个伪信号，当脚本正常退出或者set -e后因为出错而退出时被触发
+
+当你使用锁文件时，可以这样写：
+
+if [ ! -e $lockfile ]; then
+	touch $lockfile
+	critical-section
+	rm $lockfile
+else
+	echo "critical-section is already running"
+fi
+
+当最重要的部分(critical-section)正在运行时，如果杀死了脚本进程，会发生什么呢？锁文件会被扔在那，而且你的脚本在它被删除以前再也不会运行了。解决方法：
+
+if [ ! -e $lockfile ]; then
+	trap " rm -f $lockfile; exit" INT TERM EXIT
+	touch $lockfile
+	critical-section
+	rm $lockfile
+	trap - INT TERM EXIT
+else
+	echo "critical-section is already running"
+fi
+
+现在当你杀死进程时，锁文件一同被删除。注意在trap命令中明确地退出了脚本，否则脚本会继续执行trap后面的命令。
